@@ -9,7 +9,7 @@ import WavePresenceChannel from './wave-presence-channel';
 export interface Options {
     endpoint?: string,
 
-    namespace: string,
+    namespace: string | false,
 
     auth?: {
         headers: Record<string, string>,
@@ -28,7 +28,7 @@ export interface Options {
     debug?: boolean,
 }
 
-export class WaveConnector extends Connector<WaveChannel, WavePrivateChannel, PresenceChannel> {
+export class WaveConnector extends Connector<any, WaveChannel, WavePrivateChannel, PresenceChannel> {
     private connection: EventSourceConnection;
 
     private channels: Record<string, WaveChannel | WavePresenceChannel> = {};
@@ -96,5 +96,16 @@ export class WaveConnector extends Connector<WaveChannel, WavePrivateChannel, Pr
 
     socketId() {
         return this.connection.getId();
+    }
+
+    connectionStatus() {
+        // SSE driver không exposed trạng thái chi tiết.
+        // Tạm thời dựa trên việc đã có connection hay chưa.
+        return this.connection ? 'connected' : 'disconnected';
+    }
+
+    onConnectionChange() {
+        // Hiện tại không theo dõi thay đổi trạng thái chi tiết, trả về hàm hủy trống.
+        return () => {};
     }
 }
