@@ -88,13 +88,15 @@ export default class WaveChannel extends Channel {
         this.events = [];
     }
 
-    subscribed(callback: (id: string) => void): WaveChannel {
+    public subscribed(callback: (id: string) => void): this {
         this.connection.on('connected', callback)
 
         return this;
     }
 
-    error(callback: Function): WaveChannel {
-        return callback();
+    public error(callback: Function): this {
+        callback();
+
+        return this;
     }
 }

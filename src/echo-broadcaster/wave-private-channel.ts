@@ -34,7 +34,7 @@ export default class WavePrivateChannel extends WaveChannel {
         return this;
     }
 
-    public listenForWhisper(event: string, callback: Function): WavePrivateChannel {
+    public listenForWhisper(event: string, callback: Function): this {
         let listener = function (data) {
             callback(Array.isArray(data) && data.length === 1 && typeof data[0] !== 'object' ? data[0] : data);
         };
@@ -46,7 +46,7 @@ export default class WavePrivateChannel extends WaveChannel {
         return this;
     }
 
-    public stopListeningForWhisper(event: string, callback?: Function): WavePrivateChannel {
+    public stopListeningForWhisper(event: string, callback?: Function): this {
         if (callback) {
             callback = this.whisperCallbacks.get(callback);
             this.whisperCallbacks.delete(callback);
@@ -63,7 +63,7 @@ export default class WavePrivateChannel extends WaveChannel {
         return this;
     }
 
-    public error(callback: Function): WaveChannel {
+    public error(callback: Function): this {
         this.errorCallbacks.push(callback);
 
         return this;

@@ -1,4 +1,4 @@
-import { Connector } from 'laravel-echo';
+import { Connector, PresenceChannel } from 'laravel-echo';
 
 import { EventSourceConnection } from '../EventSourceConnection';
 
@@ -28,7 +28,7 @@ export interface Options {
     debug?: boolean,
 }
 
-export class WaveConnector extends Connector {
+export class WaveConnector extends Connector<WaveChannel, WavePrivateChannel, PresenceChannel> {
     private connection: EventSourceConnection;
 
     private channels: Record<string, WaveChannel | WavePresenceChannel> = {};

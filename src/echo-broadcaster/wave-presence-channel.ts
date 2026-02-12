@@ -50,7 +50,7 @@ export default class WavePresenceChannel extends WavePrivateChannel implements P
         })
     }
 
-    public here(callback: Function): WavePresenceChannel {
+    public here(callback: Function): this {
         if (this.joined) {
             request(this.connection)
                 .get(this.options.endpoint + '/presence-channel-users', this.options, { channel_name: this.name })
@@ -66,9 +66,49 @@ export default class WavePresenceChannel extends WavePrivateChannel implements P
     }
 
     /**
+     * Register a callback to be called anytime a subscription succeeds.
+     * Override to ensure the fluent interface returns the correct subtype.
+     */
+    public subscribed(callback: (id: string) => void): this {
+        this.connection.on('connected', callback);
+
+        return this;
+    }
+
+    /**
+     * Listen for a whisper event on the channel instance.
+     * Override to ensure the fluent interface returns the correct subtype.
+     */
+    public listenForWhisper(event: string, callback: Function): this {
+        super.listenForWhisper(event, callback);
+
+        return this;
+    }
+
+    /**
+     * Send a whisper event to other clients in the channel.
+     * Override to ensure the fluent interface returns the correct subtype.
+     */
+    public whisper(eventName: string, data: any): this {
+        super.whisper(eventName, data);
+
+        return this;
+    }
+
+    /**
+     * Stop listening for a whisper event on the channel instance.
+     * Override to ensure the fluent interface returns the correct subtype.
+     */
+    public stopListeningForWhisper(event: string, callback?: Function): this {
+        super.stopListeningForWhisper(event, callback);
+
+        return this;
+    }
+
+    /**
      * Listen for someone joining the channel.
      */
-    public joining(callback: Function): WavePresenceChannel {
+    public joining(callback: Function): this {
         this.listen('.join', callback);
 
         return this;
@@ -77,7 +117,7 @@ export default class WavePresenceChannel extends WavePrivateChannel implements P
     /**
      * Listen for someone leaving the channel.
      */
-    public leaving(callback: Function): WavePresenceChannel {
+    public leaving(callback: Function): this {
         this.listen('.leave', callback);
 
         return this;
